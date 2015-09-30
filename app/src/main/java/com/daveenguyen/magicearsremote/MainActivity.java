@@ -1,19 +1,49 @@
 package com.daveenguyen.magicearsremote;
 
+import android.hardware.ConsumerIrManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 public class MainActivity extends AppCompatActivity {
+    private static final String DV_TAG = "dvMain";
+    private ConsumerIrManager mIrManager;
+    private boolean mCanTransmitEarCode = false;
+    private boolean mIsUsingNewApi = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mIrManager = (ConsumerIrManager) this.getSystemService(CONSUMER_IR_SERVICE);
+
+        if (mIrManager.hasIrEmitter()) {
+
+            if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
+                // On KitKat, check if we're using 4.4.3+ API due
+                int lastIdx = Build.VERSION.RELEASE.lastIndexOf(".");
+                int VERSION_MR = Integer.valueOf(Build.VERSION.RELEASE.substring(lastIdx + 1));
+                mIsUsingNewApi = (VERSION_MR >= 3);
+            }
+
+            ConsumerIrManager.CarrierFrequencyRange[] freqs = mIrManager.getCarrierFrequencies();
+            if (freqs != null) {
+                for (ConsumerIrManager.CarrierFrequencyRange freq : freqs) {
+                    int earCarrierFreq = 38005; // TODO: Get from EarCode
+                    mCanTransmitEarCode = ((earCarrierFreq >= freq.getMinFrequency()) && (earCarrierFreq <= freq.getMaxFrequency()));
+                }
+            }
+        } else {
+            Log.e(DV_TAG, "Cannot find IR Emitter on the device");
+        }
+
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
