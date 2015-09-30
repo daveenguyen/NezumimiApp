@@ -1,5 +1,7 @@
 package com.daveenguyen.magicearsremote;
 
+import com.daveenguyen.magicears.EarCode;
+
 import android.hardware.ConsumerIrManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,6 +15,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
     private static final String DV_TAG = "dvMain";
@@ -37,8 +41,26 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, String.format("Rand: %b Crc: %b", mRandColor, mCalcCrc), Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                if (mCanTransmitEarCode) {
+                    String hexCode;
+                    EarCode earCode;
+
+                    if (mRandColor) {
+                        Random rand = new Random();
+                        hexCode = String.format("91 0E %02X", rand.nextInt(0x1E));
+                        mEditTextCode.setText(hexCode);
+
+                        earCode = new EarCode(hexCode, true, mIsUsingNewApi);
+                    } else {
+                        hexCode = mEditTextCode.getText().toString().trim();
+                        if (hexCode.isEmpty()) {
+                            return;
+                        }
+                        earCode = new EarCode(hexCode, mCalcCrc, mIsUsingNewApi);
+                    }
+
+                    mIrManager.transmit(earCode.getCarrierFrequency(), earCode.getPattern());
+                }
             }
         });
 
@@ -88,7 +110,6 @@ public class MainActivity extends AppCompatActivity {
             Log.e(DV_TAG, "Cannot find IR Emitter on the device");
             fab.hide();
         }
-
     }
 
     @Override
