@@ -6,21 +6,65 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 
 public class MainActivity extends AppCompatActivity {
     private static final String DV_TAG = "dvMain";
     private ConsumerIrManager mIrManager;
+    private EditText mEditTextCode;
+    private SwitchCompat mSwitchCalcCrc;
+    private SwitchCompat mSwitchRandColor;
     private boolean mCanTransmitEarCode = false;
     private boolean mIsUsingNewApi = true;
+    private boolean mCalcCrc;
+    private boolean mRandColor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.activity_main);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, String.format("Rand: %b Crc: %b", mRandColor, mCalcCrc), Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+
+        mEditTextCode = (EditText) findViewById(R.id.editTextCode);
+        mSwitchCalcCrc = (SwitchCompat) findViewById(R.id.swCalcCrc);
+        mSwitchRandColor = (SwitchCompat) findViewById(R.id.swRandColor);
+
+        mCalcCrc = mSwitchCalcCrc.isChecked();
+        mRandColor = mSwitchRandColor.isChecked();
+
+        mSwitchRandColor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mRandColor = mSwitchRandColor.isChecked();
+
+                mEditTextCode.setEnabled(!mRandColor);
+                mSwitchCalcCrc.setEnabled(!mRandColor);
+            }
+        });
+
+        mSwitchCalcCrc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mCalcCrc = mSwitchCalcCrc.isChecked();
+            }
+        });
 
         mIrManager = (ConsumerIrManager) this.getSystemService(CONSUMER_IR_SERVICE);
 
@@ -42,20 +86,9 @@ public class MainActivity extends AppCompatActivity {
             }
         } else {
             Log.e(DV_TAG, "Cannot find IR Emitter on the device");
+            fab.hide();
         }
 
-        setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
     }
 
     @Override
