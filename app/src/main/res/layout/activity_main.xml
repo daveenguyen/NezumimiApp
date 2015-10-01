@@ -9,6 +9,7 @@
         tools:context=".MainActivity">
 
     <android.support.design.widget.AppBarLayout
+            android:id="@+id/appbar"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:theme="@style/AppTheme.AppBarOverlay">
@@ -20,16 +21,66 @@
                 android:background="?attr/colorPrimary"
                 app:popupTheme="@style/AppTheme.PopupOverlay"/>
 
+        <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/app_bar_height">
+
+            <LinearLayout
+                    android:id="@+id/imagesGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                <ImageView
+                        android:id="@+id/imageLeft"
+                        android:layout_height="match_parent"
+                        android:layout_width="wrap_content"
+                        android:layout_weight="1"
+                        android:src="@drawable/black_circle"
+                        android:layout_marginEnd="@dimen/ears_margin"
+                        android:paddingBottom="@dimen/ears_margin"
+                        android:scaleType="fitEnd"/>
+
+                <ImageView
+                        android:id="@+id/imageRight"
+                        android:layout_height="match_parent"
+                        android:layout_width="wrap_content"
+                        android:layout_weight="1"
+                        android:src="@drawable/black_circle"
+                        android:layout_marginStart="@dimen/ears_margin"
+                        android:paddingBottom="@dimen/ears_margin"
+                        android:scaleType="fitStart"/>
+
+            </LinearLayout>
+
+            <ImageView
+                    android:layout_marginTop="72dp"
+                    android:src="@drawable/black_circle"
+                    android:layout_width="match_parent"
+                    android:scaleType="fitCenter"
+                    android:tint="@color/colorPrimaryDarkest"
+                    android:layout_height="280dp"/>
+
+        </FrameLayout>
+
+
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_main"/>
+    <android.support.v4.widget.NestedScrollView
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+        <include layout="@layout/content_main"/>
+
+    </android.support.v4.widget.NestedScrollView>
 
     <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_margin="@dimen/fab_margin"
+            app:layout_anchor="@id/appbar"
+            app:layout_anchorGravity="bottom|right|end"
             android:src="@drawable/ic_speaker_phone_24dp"/>
 
 </android.support.design.widget.CoordinatorLayout>

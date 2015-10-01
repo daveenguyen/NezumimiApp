@@ -2,11 +2,11 @@ package com.daveenguyen.magicearsremote;
 
 import com.daveenguyen.magicears.EarCode;
 
+import android.graphics.Color;
 import android.hardware.ConsumerIrManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
@@ -15,15 +15,50 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
     private static final String DV_TAG = "dvMain";
+    private final String[] color_table = {
+            "#F9F1FF",
+            "#00BFFF",
+            "#1F4DFE",
+            "#5740FF",
+            "#0000FE",
+            "#FFD8FF",
+            "#D19DFF",
+            "#A988FF",
+            "#B261D5",
+            "#FFC1FF",
+            "#FF8BFF",
+            "#FF7AFF",
+            "#FF73E0",
+            "#FF009B",
+            "#FF4062",
+            "#FFAD50",
+            "#FF560A",
+            "#FF7701",
+            "#FFC600",
+            "#FF7340",
+            "#FF5900",
+            "#FF0000",
+            "#00E0FF",
+            "#72FED1",
+            "#00FE97",
+            "#00F700",
+            "#00ED87",
+            "#FFEBF3",
+            "#FFE4EF",
+            "#000000"
+    };
     private ConsumerIrManager mIrManager;
     private EditText mEditTextCode;
     private SwitchCompat mSwitchCalcCrc;
     private SwitchCompat mSwitchRandColor;
+    private ImageView mImageLeft;
+    private ImageView mImageRight;
     private boolean mCanTransmitEarCode = false;
     private boolean mIsUsingNewApi = true;
     private boolean mCalcCrc;
@@ -47,8 +82,12 @@ public class MainActivity extends AppCompatActivity {
 
                     if (mRandColor) {
                         Random rand = new Random();
-                        hexCode = String.format("91 0E %02X", rand.nextInt(0x1E));
+                        int leftColor = rand.nextInt(0x1E);
+                        int rightColor = rand.nextInt(0x1E);
+                        hexCode = String.format("9B 24 0E %02X 0E %02X D1 42 04 20 D0 32 F0", leftColor, rightColor + 0x80);
                         mEditTextCode.setText(hexCode);
+                        mImageLeft.setColorFilter(Color.parseColor(color_table[leftColor]));
+                        mImageRight.setColorFilter(Color.parseColor(color_table[rightColor]));
 
                         earCode = new EarCode(hexCode, true, mIsUsingNewApi);
                     } else {
@@ -57,6 +96,9 @@ public class MainActivity extends AppCompatActivity {
                             return;
                         }
                         earCode = new EarCode(hexCode, mCalcCrc, mIsUsingNewApi);
+
+                        mImageLeft.setColorFilter(Color.BLACK);
+                        mImageRight.setColorFilter(Color.BLACK);
                     }
 
                     mIrManager.transmit(earCode.getCarrierFrequency(), earCode.getPattern());
@@ -67,6 +109,8 @@ public class MainActivity extends AppCompatActivity {
         mEditTextCode = (EditText) findViewById(R.id.editTextCode);
         mSwitchCalcCrc = (SwitchCompat) findViewById(R.id.swCalcCrc);
         mSwitchRandColor = (SwitchCompat) findViewById(R.id.swRandColor);
+        mImageLeft = (ImageView) findViewById(R.id.imageLeft);
+        mImageRight = (ImageView) findViewById(R.id.imageRight);
 
         mCalcCrc = mSwitchCalcCrc.isChecked();
         mRandColor = mSwitchRandColor.isChecked();
