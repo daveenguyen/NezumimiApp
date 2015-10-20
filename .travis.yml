@@ -1,0 +1,17 @@
+language: android
+android:
+   components:
+   - platform-tools
+   - android-23
+   - build-tools-23.0.1
+   - extra
+
+jdk: oraclejdk7
+
+notifications:
+  email: false
+
+sudo: false
+
+script:
+  - ./gradlew clean build
