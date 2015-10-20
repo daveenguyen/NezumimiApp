@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
                         Random rand = new Random();
                         int leftColor = rand.nextInt(0x1E);
                         int rightColor = rand.nextInt(0x1E);
-                        hexCode = String.format("9B 24 0E %02X 0E %02X D1 42 04 20 D0 32 F0", leftColor, rightColor + 0x80);
+                        hexCode = String.format("9B 26 0E %02X 0E %02X D1 42 F7 20 D0 32 F0", leftColor, rightColor + 0x80);
                         mEditTextCode.setText(hexCode);
                         mImageLeft.setColorFilter(Color.parseColor(color_table[leftColor]));
                         mImageRight.setColorFilter(Color.parseColor(color_table[rightColor]));
@@ -97,8 +97,8 @@ public class MainActivity extends AppCompatActivity {
                         }
                         earCode = new EarCode(hexCode, mCalcCrc, mIsUsingNewApi);
 
-                        mImageLeft.setColorFilter(Color.BLACK);
-                        mImageRight.setColorFilter(Color.BLACK);
+                        mImageLeft.setColorFilter(Color.WHITE);
+                        mImageRight.setColorFilter(Color.WHITE);
                     }
 
                     mIrManager.transmit(earCode.getCarrierFrequency(), earCode.getPattern());

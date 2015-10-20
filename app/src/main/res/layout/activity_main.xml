@@ -39,6 +39,7 @@
                         android:src="@drawable/black_circle"
                         android:layout_marginEnd="@dimen/ears_margin"
                         android:paddingBottom="@dimen/ears_margin"
+                        android:tint="#ffffff"
                         android:scaleType="fitEnd"/>
 
                 <ImageView
@@ -49,6 +50,7 @@
                         android:src="@drawable/black_circle"
                         android:layout_marginStart="@dimen/ears_margin"
                         android:paddingBottom="@dimen/ears_margin"
+                        android:tint="#ffffff"
                         android:scaleType="fitStart"/>
 
             </LinearLayout>
