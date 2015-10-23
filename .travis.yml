@@ -14,4 +14,8 @@ notifications:
 sudo: false
 
 script:
-  - ./gradlew clean build
+  - ./gradlew build
+
+branches:
+  only:
+    - master
