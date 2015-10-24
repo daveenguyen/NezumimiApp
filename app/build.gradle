@@ -5,7 +5,7 @@ android {
     buildToolsVersion "23.0.1"
 
     defaultConfig {
-        applicationId "com.daveenguyen.magicearsremote"
+        applicationId "com.daveenguyen.nezumimi"
         minSdkVersion 19
         targetSdkVersion 23
         versionCode 1

@@ -1,4 +1,4 @@
-package com.daveenguyen.magicearsremote;
+package com.daveenguyen.nezumimi;
 
 import org.junit.Test;
 

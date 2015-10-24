@@ -1,4 +1,4 @@
-package com.daveenguyen.magicearsremote;
+package com.daveenguyen.nezumimi;
 
 import com.daveenguyen.magicears.EarCode;
 
