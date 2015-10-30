@@ -40,15 +40,4 @@
             android:checked="true"
             android:text="@string/rand_color_label"/>
 
-    <android.support.v7.widget.SwitchCompat
-            android:id="@+id/swCalcCrc"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/single_list_height"
-            android:layout_below="@id/swRandColor"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:checked="true"
-            android:enabled="false"
-            android:text="@string/calc_crc_label"/>
-
 </RelativeLayout>

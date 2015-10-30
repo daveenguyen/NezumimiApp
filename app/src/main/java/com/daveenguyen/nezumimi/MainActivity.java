@@ -1,6 +1,6 @@
 package com.daveenguyen.nezumimi;
 
-import com.daveenguyen.magicears.EarCode;
+import com.daveenguyen.mahoucode.MahouCode;
 
 import android.graphics.Color;
 import android.hardware.ConsumerIrManager;
@@ -55,13 +55,11 @@ public class MainActivity extends AppCompatActivity {
     };
     private ConsumerIrManager mIrManager;
     private EditText mEditTextCode;
-    private SwitchCompat mSwitchCalcCrc;
     private SwitchCompat mSwitchRandColor;
     private ImageView mImageLeft;
     private ImageView mImageRight;
-    private boolean mCanTransmitEarCode = false;
+    private boolean mCanTransmitCode = false;
     private boolean mIsUsingNewApi = true;
-    private boolean mCalcCrc;
     private boolean mRandColor;
 
     @Override
@@ -76,59 +74,47 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mCanTransmitEarCode) {
+                if (mCanTransmitCode) {
                     String hexCode;
-                    EarCode earCode;
+                    MahouCode mCode;
 
                     if (mRandColor) {
                         Random rand = new Random();
                         int leftColor = rand.nextInt(0x1E);
                         int rightColor = rand.nextInt(0x1E);
-                        hexCode = String.format("9B 26 0E %02X 0E %02X D1 42 F7 20 D0 32 F0", leftColor, rightColor + 0x80);
+                        hexCode = MahouCode.parse9x(String.format("26 0E %02X 0E %02X D1 42 F7 20 D0 32 F0", leftColor, rightColor + 0x80));
                         mEditTextCode.setText(hexCode);
+
                         mImageLeft.setColorFilter(Color.parseColor(color_table[leftColor]));
                         mImageRight.setColorFilter(Color.parseColor(color_table[rightColor]));
-
-                        earCode = new EarCode(hexCode, true, mIsUsingNewApi);
                     } else {
                         hexCode = mEditTextCode.getText().toString().trim();
                         if (hexCode.isEmpty()) {
                             return;
                         }
-                        earCode = new EarCode(hexCode, mCalcCrc, mIsUsingNewApi);
 
-                        mImageLeft.setColorFilter(Color.WHITE);
-                        mImageRight.setColorFilter(Color.WHITE);
+                        mImageLeft.setColorFilter(getResources().getColor(R.color.defaultEars));
+                        mImageRight.setColorFilter(getResources().getColor(R.color.defaultEars));
                     }
 
-                    mIrManager.transmit(earCode.getCarrierFrequency(), earCode.getPattern());
+                    mCode = new MahouCode(hexCode);
+                    helperTransmit(mCode);
                 }
             }
         });
 
         mEditTextCode = (EditText) findViewById(R.id.editTextCode);
-        mSwitchCalcCrc = (SwitchCompat) findViewById(R.id.swCalcCrc);
         mSwitchRandColor = (SwitchCompat) findViewById(R.id.swRandColor);
         mImageLeft = (ImageView) findViewById(R.id.imageLeft);
         mImageRight = (ImageView) findViewById(R.id.imageRight);
 
-        mCalcCrc = mSwitchCalcCrc.isChecked();
         mRandColor = mSwitchRandColor.isChecked();
 
         mSwitchRandColor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mRandColor = mSwitchRandColor.isChecked();
-
                 mEditTextCode.setEnabled(!mRandColor);
-                mSwitchCalcCrc.setEnabled(!mRandColor);
-            }
-        });
-
-        mSwitchCalcCrc.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mCalcCrc = mSwitchCalcCrc.isChecked();
             }
         });
 
@@ -141,18 +127,28 @@ public class MainActivity extends AppCompatActivity {
                 int lastIdx = Build.VERSION.RELEASE.lastIndexOf(".");
                 int VERSION_MR = Integer.valueOf(Build.VERSION.RELEASE.substring(lastIdx + 1));
                 mIsUsingNewApi = (VERSION_MR >= 3);
+            } else {
+                mIsUsingNewApi = true;
             }
 
             ConsumerIrManager.CarrierFrequencyRange[] freqs = mIrManager.getCarrierFrequencies();
             if (freqs != null) {
                 for (ConsumerIrManager.CarrierFrequencyRange freq : freqs) {
-                    int earCarrierFreq = 38005; // TODO: Get from EarCode
-                    mCanTransmitEarCode = ((earCarrierFreq >= freq.getMinFrequency()) && (earCarrierFreq <= freq.getMaxFrequency()));
+                    int carrierFreq = MahouCode.getCarrierFrequency();
+                    mCanTransmitCode = ((carrierFreq >= freq.getMinFrequency()) && (carrierFreq <= freq.getMaxFrequency()));
                 }
             }
         } else {
             Log.e(DV_TAG, "Cannot find IR Emitter on the device");
             fab.hide();
+        }
+    }
+
+    private void helperTransmit(MahouCode code) {
+        if (mIsUsingNewApi) {
+            mIrManager.transmit(code.getCarrierFrequency(), code.getPattern());
+        } else {
+            mIrManager.transmit(code.getCarrierFrequency(), code.getOldApiPattern());
         }
     }
 

@@ -23,6 +23,10 @@
 
         <FrameLayout
                 android:layout_width="match_parent"
+                android:background="@color/colorPrimaryDarkest"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/activity_vertical_margin"
                 android:layout_height="@dimen/app_bar_height">
 
             <LinearLayout
@@ -39,7 +43,7 @@
                         android:src="@drawable/black_circle"
                         android:layout_marginEnd="@dimen/ears_margin"
                         android:paddingBottom="@dimen/ears_margin"
-                        android:tint="#ffffff"
+                        android:tint="@color/defaultEars"
                         android:scaleType="fitEnd"/>
 
                 <ImageView
@@ -50,7 +54,7 @@
                         android:src="@drawable/black_circle"
                         android:layout_marginStart="@dimen/ears_margin"
                         android:paddingBottom="@dimen/ears_margin"
-                        android:tint="#ffffff"
+                        android:tint="@color/defaultEars"
                         android:scaleType="fitStart"/>
 
             </LinearLayout>
@@ -60,7 +64,7 @@
                     android:src="@drawable/black_circle"
                     android:layout_width="match_parent"
                     android:scaleType="fitCenter"
-                    android:tint="@color/colorPrimaryDarkest"
+                    android:tint="@color/defaultEars"
                     android:layout_height="280dp"/>
 
         </FrameLayout>
@@ -83,6 +87,7 @@
             android:layout_height="wrap_content"
             app:layout_anchor="@id/appbar"
             app:layout_anchorGravity="bottom|right|end"
+            style="@style/floating_action_button"
             android:src="@drawable/ic_speaker_phone_24dp"/>
 
 </android.support.design.widget.CoordinatorLayout>
