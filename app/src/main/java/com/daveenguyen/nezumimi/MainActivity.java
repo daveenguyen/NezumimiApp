@@ -1,5 +1,6 @@
 package com.daveenguyen.nezumimi;
 
+import com.afollestad.materialdialogs.color.ColorChooserDialog;
 import com.daveenguyen.mahoucode.MahouCode;
 
 import android.graphics.Color;
@@ -10,7 +11,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,39 +19,39 @@ import android.widget.ImageView;
 
 import java.util.Random;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ColorChooserDialog.ColorCallback {
     private static final String DV_TAG = "dvMain";
-    private final String[] color_table = {
-            "#F9F1FF",
-            "#00BFFF",
-            "#1F4DFE",
-            "#5740FF",
-            "#0000FE",
-            "#FFD8FF",
-            "#D19DFF",
-            "#A988FF",
-            "#B261D5",
-            "#FFC1FF",
-            "#FF8BFF",
-            "#FF7AFF",
-            "#FF73E0",
-            "#FF009B",
-            "#FF4062",
-            "#FFAD50",
-            "#FF560A",
-            "#FF7701",
-            "#FFC600",
-            "#FF7340",
-            "#FF5900",
-            "#FF0000",
-            "#00E0FF",
-            "#72FED1",
-            "#00FE97",
-            "#00F700",
-            "#00ED87",
-            "#FFEBF3",
-            "#FFE4EF",
-            "#000000"
+    private final int[] color_table = {
+            Color.parseColor("#F9F1FF"),
+            Color.parseColor("#00BFFF"),
+            Color.parseColor("#1F4DFE"),
+            Color.parseColor("#5740FF"),
+            Color.parseColor("#0000FE"),
+            Color.parseColor("#FFD8FF"),
+            Color.parseColor("#D19DFF"),
+            Color.parseColor("#A988FF"),
+            Color.parseColor("#B261D5"),
+            Color.parseColor("#FFC1FF"),
+            Color.parseColor("#FF8BFF"),
+            Color.parseColor("#FF7AFF"),
+            Color.parseColor("#FF73E0"),
+            Color.parseColor("#FF009B"),
+            Color.parseColor("#FF4062"),
+            Color.parseColor("#FFAD50"),
+            Color.parseColor("#FF560A"),
+            Color.parseColor("#FF7701"),
+            Color.parseColor("#FFC600"),
+            Color.parseColor("#FF7340"),
+            Color.parseColor("#FF5900"),
+            Color.parseColor("#FF0000"),
+            Color.parseColor("#00E0FF"),
+            Color.parseColor("#72FED1"),
+            Color.parseColor("#00FE97"),
+            Color.parseColor("#00F700"),
+            Color.parseColor("#00ED87"),
+            Color.parseColor("#FFEBF3"),
+            Color.parseColor("#FFE4EF"),
+            Color.parseColor("#000000")
     };
     private ConsumerIrManager mIrManager;
     private EditText mEditTextCode;
@@ -61,16 +61,25 @@ public class MainActivity extends AppCompatActivity {
     private boolean mCanTransmitCode = false;
     private boolean mIsUsingNewApi = true;
     private boolean mRandColor;
+    private boolean mLeftClicked;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+
+        mEditTextCode = (EditText) findViewById(R.id.editTextCode);
+        mSwitchRandColor = (SwitchCompat) findViewById(R.id.swRandColor);
+        mImageLeft = (ImageView) findViewById(R.id.imageLeft);
+        mImageRight = (ImageView) findViewById(R.id.imageRight);
+
+
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -85,8 +94,8 @@ public class MainActivity extends AppCompatActivity {
                         hexCode = MahouCode.parse9x(String.format("26 0E %02X 0E %02X D1 42 F7 20 D0 32 F0", leftColor, rightColor + 0x80));
                         mEditTextCode.setText(hexCode);
 
-                        mImageLeft.setColorFilter(Color.parseColor(color_table[leftColor]));
-                        mImageRight.setColorFilter(Color.parseColor(color_table[rightColor]));
+                        mImageLeft.setColorFilter(color_table[leftColor]);
+                        mImageRight.setColorFilter(color_table[rightColor]);
                     } else {
                         hexCode = mEditTextCode.getText().toString().trim();
                         if (hexCode.isEmpty()) {
@@ -103,10 +112,19 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        mEditTextCode = (EditText) findViewById(R.id.editTextCode);
-        mSwitchRandColor = (SwitchCompat) findViewById(R.id.swRandColor);
-        mImageLeft = (ImageView) findViewById(R.id.imageLeft);
-        mImageRight = (ImageView) findViewById(R.id.imageRight);
+        mImageLeft.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onEarClick(true, view);
+            }
+        });
+
+        mImageRight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onEarClick(false, view);
+            }
+        });
 
         mRandColor = mSwitchRandColor.isChecked();
 
@@ -120,10 +138,14 @@ public class MainActivity extends AppCompatActivity {
 
         mIrManager = (ConsumerIrManager) this.getSystemService(CONSUMER_IR_SERVICE);
 
+        checkInfrared();
+    }
+
+    private void checkInfrared() {
         if (mIrManager.hasIrEmitter()) {
 
             if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
-                // On KitKat, check if we're using 4.4.3+ API due
+                // On KitKat, check if we're using 4.4.3+ API
                 int lastIdx = Build.VERSION.RELEASE.lastIndexOf(".");
                 int VERSION_MR = Integer.valueOf(Build.VERSION.RELEASE.substring(lastIdx + 1));
                 mIsUsingNewApi = (VERSION_MR >= 3);
@@ -138,13 +160,12 @@ public class MainActivity extends AppCompatActivity {
                     mCanTransmitCode = ((carrierFreq >= freq.getMinFrequency()) && (carrierFreq <= freq.getMaxFrequency()));
                 }
             }
-        } else {
-            Log.e(DV_TAG, "Cannot find IR Emitter on the device");
-            fab.hide();
         }
     }
 
     private void helperTransmit(MahouCode code) {
+        if (mCanTransmitCode) return;
+
         if (mIsUsingNewApi) {
             mIrManager.transmit(code.getCarrierFrequency(), code.getPattern());
         } else {
@@ -172,5 +193,33 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void onEarClick(boolean isLeft, View view) {
+        mLeftClicked = isLeft;
+
+        // Pass AppCompatActivity which implements ColorCallback, along with the title of the dialog
+        new ColorChooserDialog.Builder(this, R.string.color_chooser_title)
+                .allowUserColorInput(false)
+                .customColors(color_table, null)
+                .doneButton(R.string.md_done_label)  // changes label of the done button
+                .cancelButton(R.string.md_cancel_label)  // changes label of the cancel button
+                .backButton(R.string.md_back_label)  // changes label of the back button
+                .dynamicButtonColor(false)  // defaults to true, false will disable changing action buttons' color to currently selected color
+                .show();
+    }
+
+    @Override
+    public void onColorSelection(ColorChooserDialog colorChooserDialog, int chosenColor) {
+        for (int i = 0; i < color_table.length ; i++) {
+            if (color_table[i] == chosenColor) {
+                mEditTextCode.setText("" + i);
+                if (mLeftClicked) {
+                    mImageLeft.setColorFilter(color_table[i]);
+                } else {
+                    mImageRight.setColorFilter(color_table[i]);
+                }
+            }
+        }
     }
 }

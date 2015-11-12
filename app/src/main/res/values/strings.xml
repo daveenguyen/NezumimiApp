@@ -3,4 +3,5 @@
     <string name="action_settings">Settings</string>
     <string name="rand_color_label">Send Random Color</string>
     <string name="edit_code_hint">Enter Hex Code</string>
+    <string name="color_chooser_title">Edit Ear Color</string>
 </resources>
