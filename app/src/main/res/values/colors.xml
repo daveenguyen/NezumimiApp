@@ -4,5 +4,5 @@
     <color name="colorPrimaryDark">#D32F2F</color>
     <color name="colorPrimaryDarkest">#B71C1C</color>
     <color name="colorAccent">#536DFE</color>
-    <color name="defaultEars">#FFFFFF</color>
+    <color name="defaultEars">#E0E0E0</color>
 </resources>
