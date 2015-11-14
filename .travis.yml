@@ -14,7 +14,7 @@ notifications:
 sudo: false
 
 script:
-  - ./gradlew build
+  - ./gradlew assembleRelease check publishApkRelease
 
 branches:
   only:
