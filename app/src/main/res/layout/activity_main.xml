@@ -44,7 +44,8 @@
                         android:layout_marginEnd="@dimen/ears_margin"
                         android:paddingBottom="@dimen/ears_margin"
                         android:tint="@color/defaultEars"
-                        android:scaleType="fitEnd"/>
+                        android:scaleType="fitEnd"
+                        tools:ignore="ContentDescription" />
 
                 <ImageView
                         android:id="@+id/imageRight"
@@ -55,7 +56,8 @@
                         android:layout_marginStart="@dimen/ears_margin"
                         android:paddingBottom="@dimen/ears_margin"
                         android:tint="@color/defaultEars"
-                        android:scaleType="fitStart"/>
+                        android:scaleType="fitStart"
+                        tools:ignore="ContentDescription" />
 
             </LinearLayout>
 
@@ -65,7 +67,8 @@
                     android:layout_width="match_parent"
                     android:scaleType="fitCenter"
                     android:tint="@color/defaultEars"
-                    android:layout_height="280dp"/>
+                    android:layout_height="280dp"
+                    tools:ignore="ContentDescription" />
 
         </FrameLayout>
 

@@ -7,6 +7,7 @@ import android.hardware.ConsumerIrManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
@@ -93,8 +94,8 @@ public class MainActivity extends AppCompatActivity {
                             return;
                         }
 
-                        mImageLeft.setColorFilter(getResources().getColor(R.color.defaultEars));
-                        mImageRight.setColorFilter(getResources().getColor(R.color.defaultEars));
+                        mImageLeft.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.defaultEars));
+                        mImageRight.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.defaultEars));
                     }
 
                     mCode = new MahouCode(hexCode);
