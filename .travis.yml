@@ -14,7 +14,10 @@ notifications:
 sudo: false
 
 script:
-  - ./gradlew build
+  - ./gradlew assembleRelease check
+
+after_success:
+  - ./scripts/publish.sh
 
 branches:
   only:
