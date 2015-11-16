@@ -58,5 +58,8 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.1.0'
     compile 'com.android.support:design:23.1.0'
     compile 'com.github.daveenguyen:mahoucode:0.1.1'
+    compile('com.github.afollestad.material-dialogs:commons:0.8.5.0@aar') {
+        transitive = true
+    }
 }
 
