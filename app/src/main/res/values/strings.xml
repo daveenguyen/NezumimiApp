@@ -5,7 +5,7 @@
     <string name="edit_code_hint">Enter Hex Code</string>
     <string name="color_chooser_title">Edit Ear Color</string>
     <string name="single_color_label">Single Color</string>
-    <string name="blink_label">Pulse Ears</string>
+    <string name="blink_label">Pulse Color</string>
     <string name="advanced_mode_label">Advanced Settings</string>
     <string name="code9x_label">9x Code</string>
     <string name="gen_code_label">Generate Code</string>

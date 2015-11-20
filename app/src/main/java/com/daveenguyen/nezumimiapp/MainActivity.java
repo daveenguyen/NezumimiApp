@@ -1,4 +1,4 @@
-package com.daveenguyen.nezumimi;
+package com.daveenguyen.nezumimiapp;
 
 import com.afollestad.materialdialogs.color.ColorChooserDialog;
 import com.daveenguyen.mahoucode.MahouCode;
@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements ColorChooserDialo
     // Sorted with http://stackoverflow.com/questions/8915113/sort-hex-colors-to-match-rainbow
     private final int[] sort_color = {
             Color.parseColor("#000000"),
+            Color.parseColor("#FF4062"),
             Color.parseColor("#FF0000"),
             Color.parseColor("#FF7340"),
             Color.parseColor("#FF560A"),
@@ -85,8 +86,7 @@ public class MainActivity extends AppCompatActivity implements ColorChooserDialo
             Color.parseColor("#FF73E0"),
             Color.parseColor("#FF009B"),
             Color.parseColor("#FFE4EF"),
-            Color.parseColor("#FFEBF3"),
-            Color.parseColor("#FF4062")
+            Color.parseColor("#FFEBF3")
     };
     private ConsumerIrManager mIrManager;
     private EditText mEditTextCode;

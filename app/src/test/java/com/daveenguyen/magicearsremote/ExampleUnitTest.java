@@ -1,4 +1,4 @@
-package com.daveenguyen.nezumimi;
+package com.daveenguyen.nezumimiapp;
 
 import org.junit.Test;
 

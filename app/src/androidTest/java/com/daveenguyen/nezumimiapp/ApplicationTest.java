@@ -1,4 +1,4 @@
-package com.daveenguyen.nezumimi;
+package com.daveenguyen.nezumimiapp;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

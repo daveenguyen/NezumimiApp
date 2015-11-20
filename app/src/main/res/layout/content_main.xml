@@ -11,11 +11,28 @@
         tools:showIn="@layout/activity_main"
         tools:context=".MainActivity">
 
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/etContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin">
+
+        <EditText
+            android:id="@+id/editTextCode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/edit_code_hint"
+            android:digits="0123456789ABCDEF "
+            android:inputType="textCapCharacters"/>
+
+    </android.support.design.widget.TextInputLayout>
+
     <android.support.v7.widget.SwitchCompat
         android:id="@+id/swRandColor"
         android:layout_width="match_parent"
         android:layout_height="@dimen/single_list_height"
-        android:layout_marginTop="@dimen/small_margin"
         android:paddingTop="4dp"
         android:paddingBottom="4dp"
         android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -31,7 +48,7 @@
         android:paddingBottom="4dp"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
-        android:checked="false"
+        android:checked="true"
         android:text="@string/single_color_label"/>
 
     <android.support.v7.widget.SwitchCompat
@@ -42,7 +59,7 @@
         android:paddingBottom="4dp"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
-        android:checked="true"
+        android:checked="false"
         android:text="@string/blink_label"/>
 
 
@@ -63,22 +80,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:visibility="gone">
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/etContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin">
-
-            <EditText
-                android:id="@+id/editTextCode"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/edit_code_hint"
-                android:digits="0123456789ABCDEF "
-                android:inputType="textCapCharacters"/>
-
-        </android.support.design.widget.TextInputLayout>
 
         <android.support.v7.widget.SwitchCompat
             android:id="@+id/genCode"
