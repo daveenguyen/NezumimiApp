@@ -142,32 +142,28 @@ public class MainActivity extends AppCompatActivity implements ColorChooserDialo
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mCanTransmitCode) {
-                    String hexCode;
-                    MahouCode mCode;
+                String hexCode;
+                MahouCode mCode;
 
-                    if (!mAdvMode || mGenCode) {
-                        hexCode = generateCode();
-                    } else {
-                        hexCode = mEditTextCode.getText().toString().trim();
-                        if (hexCode.isEmpty()) {
-                            // TODO: Alert user
-                            return;
-                        }
-
-                        if (mCode9x) {
-                            hexCode = MahouCode.parse9x(hexCode);
-                        }
-
-                        mImageLeft.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.defaultEars));
-                        mImageRight.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.defaultEars));
+                if (!mAdvMode || mGenCode) {
+                    hexCode = generateCode();
+                } else {
+                    hexCode = mEditTextCode.getText().toString().trim();
+                    if (hexCode.isEmpty()) {
+                        // TODO: Alert user
+                        return;
                     }
 
-                    mCode = new MahouCode(hexCode);
-                    helperTransmit(mCode);
-                } else {
-                    // TODO: Alert user
+                    if (mCode9x) {
+                        hexCode = MahouCode.parse9x(hexCode);
+                    }
+
+                    mImageLeft.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.defaultEars));
+                    mImageRight.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.defaultEars));
                 }
+
+                mCode = new MahouCode(hexCode);
+                helperTransmit(mCode);
             }
         });
 
@@ -387,5 +383,7 @@ public class MainActivity extends AppCompatActivity implements ColorChooserDialo
 
         mImageLeft.setColorFilter(color_table[leftColor]);
         mImageRight.setColorFilter(color_table[rightColor]);
+
+        if (!mAdvMode || mGenCode) generateCode();
     }
 }

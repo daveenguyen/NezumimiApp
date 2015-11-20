@@ -6,11 +6,11 @@ android {
     buildToolsVersion "23.0.1"
 
     defaultConfig {
-        applicationId "com.daveenguyen.nezumimi"
+        applicationId "com.daveenguyen.nezumimiapp"
         minSdkVersion 19
         targetSdkVersion 23
         versionCode System.getenv("TRAVIS_BUILD_NUMBER") as Integer ?: 1
-        versionName "1.0.1"
+        versionName "1.0.0"
     }
 
     compileOptions {
